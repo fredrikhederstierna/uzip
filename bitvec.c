@@ -15,8 +15,8 @@
 #define BITVEC_SIZE_BITS  (256)
 #define BITVEC_SIZE_BYTES (BITVEC_SIZE_BITS / 8)
 
-static uint8_t  bitvec[BITVEC_SIZE_BYTES];
-static uint16_t bitvec_end_pos = 0;
+static uint8_t  bitvec[BITVEC_SIZE_BYTES+1];
+static uint32_t bitvec_end_pos = 0;
 
 void bitvec_insert_bits(uint8_t *bitv, uint32_t nbits)
 {
