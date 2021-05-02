@@ -2,38 +2,29 @@
    Fredrik Hederstierna 2021
 */
 
+// Libc
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
 #include <string.h>
 #include <stdbool.h>
 #include <limits.h>
+
+// Linux
 #include <errno.h>
 
+// Codec
 #include <bitvec.h>
-
-#define UZIP_CODEC_BUF_SIZE (256)
-static uint8_t encoder_data[UZIP_CODEC_BUF_SIZE] = { 0 };
-static uint8_t decoder_data[UZIP_CODEC_BUF_SIZE] = { 0 };
+#include <uzip_crc.h>
 
 //--------------------------------
-int main(int argc, char **argv)
+// some testcode
+static void test_bitvec(void)
 {
-  int ret = EXIT_SUCCESS;
-
-#if 0
-  if (argc != 2) {
-    printf("No filename argument found, argc = %d.\n", argc);
-    goto exit_main;
-  }
-  char *filename = argv[1];
-#endif
-
+#define UZIP_CODEC_BUF_SIZE (256)
+  static uint8_t encoder_data[UZIP_CODEC_BUF_SIZE] = { 0 };
+  static uint8_t decoder_data[UZIP_CODEC_BUF_SIZE] = { 0 };
   bitvec_init(encoder_data, 0);
-
-#if 1
-  // some testcode
-
   // try insert some random data
   uint8_t x = 0xFF;
   bitvec_insert_bits(&x, 3);
@@ -73,14 +64,41 @@ int main(int argc, char **argv)
   memset(test32, 0, sizeof(test32));
   bitvec_extract_bits(test32, 9);
   printf("test32 = %02x %02x %02x %02x\n", test32[0], test32[1], test32[2], test32[3]);
-#endif //test
+}
 
-#if 0
+//-------------------------------------------------------
+// some testcode
+static void test_crc32(void)
+{
+  uint8_t data[17] = { 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17 };
+  uint32_t prev_crc = 0;
+  uint32_t crc32 = uzip_crc32_calc(data, 17, prev_crc);
+  printf("crc32 = %d (0x%08x)\n", crc32, crc32);
+}
+
+//-------------------------------------------------------
+int main(int argc, char **argv)
+{
+  int ret = EXIT_SUCCESS;
+
+  if (argc != 3) {
+    printf("No filename arguments found, argc = %d.\n", argc);
+    printf("Use: main <infile> <outfile>\n");
+    goto exit_main;
+  }
+  char *filename_in  = argv[1];
+  char *filename_out = argv[2];
+
+  // test bitvec
+  test_bitvec();
+
+  // test crc32
+  test_crc32();
+
  exit_main:
   if (ret == EXIT_FAILURE) {
     fprintf(stderr, "exit: error %d, %s\n", errno, strerror(errno));
   }
-#endif
 
   return ret;
 }

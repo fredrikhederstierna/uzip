@@ -8,11 +8,11 @@
 #include <string.h>
 #include <stdbool.h>
 #include <limits.h>
-#include <errno.h>
 
 #include <bitvec.h>
 
 // bit vector
+// TODO: make a struct to control memory externally, no local alloc, can be on stack?
 static uint8_t *bitvec_data          = NULL;
 static uint32_t bitvec_encoded_nbits = 0;
 

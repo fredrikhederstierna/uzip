@@ -12,6 +12,7 @@ CVPATH   := $(INCLUDE) .
 vpath   %.c $(CVPATH)
 
 CFILES	+= uzip_main.c
+CFILES	+= uzip_crc.c
 CFILES	+= bitvec.c
 
 all:
